@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2>{{ listing.title }}</h2>
+<img src="{{ listing.image_url }}" alt="{{ listing.title }}" style="width: 300px; height: auto;">
+<p>Description: {{ listing.description }}</p>
+<p>Starting Bid: {{ listing.starting_bid }}</p>
+<p>Current Price: {{ listing.current_price }}</p>
+
+<h3>Place a Bid</h3>
+<form action="{% url 'listing_detail' listing.id %}" method="POST">
+    {% csrf_token %}
+    {{ bid_form.as_p }}  
+    <button type="submit" name="place_bid">Place Bid</button> 
+</form>
+
+<h3>Comments</h3>
+<ul>
+    {% for comment in comments %}
+    <li>{{ comment.user }}: {{ comment.text }}</li>
+    {% empty %}
+    <li>No comments yet.</li>
+    {% endfor %}
+</ul>
+
+<form action="{% url 'add_comment' listing.id %}" method="POST">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit">Add Comment</button>
+</form>
+{% endblock %}
